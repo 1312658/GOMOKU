@@ -1,0 +1,20 @@
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\bin\Debug\1312658.exe.config
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\bin\Debug\1312658.exe
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\bin\Debug\1312658.pdb
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\1312658.csprojResolveAssemblyReference.cache
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\MainWindow.g.cs
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\App.g.cs
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\1312658_MarkupCompile.cache
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\1312658_MarkupCompile.lref
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\MainWindow.baml
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\1312658.g.resources
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\_1312658.Properties.Resources.resources
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\1312658.csproj.GenerateResource.Cache
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\1312658.exe
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\1312658.pdb
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\My_Row.g.cs
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Gomoku\MySomoku\1312658\obj\Debug\My_Row.baml
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Bài tập 9\Gomoku\MySomoku\1312658\bin\Debug\1312658.exe.config
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Bài tập 9\Gomoku\MySomoku\1312658\obj\Debug\1312658.exe
+C:\Users\leanh_000\Google Drive\HỌC KÌ V\LT WIN\Bài tập 9\Gomoku\MySomoku\1312658\obj\Debug\1312658.pdb
