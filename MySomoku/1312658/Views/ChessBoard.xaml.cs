@@ -86,6 +86,13 @@ namespace _1312658.Views
                     Connection();
                 }
             }
+            else
+            {
+                Frm_Menu menu = new Frm_Menu();
+                if (Exit_changed != null)
+                    Exit_changed();
+                menu.ShowDialog();
+            }
         }
 
         private StackPanel setPicture(string picture)
@@ -244,5 +251,8 @@ namespace _1312658.Views
                     CaroTable[i, j].Click += CaroButtonTable_Click;
                 }
         }
+
+        public delegate void Exit_ChangedHandler();
+        public event Exit_ChangedHandler Exit_changed;
     }
 }

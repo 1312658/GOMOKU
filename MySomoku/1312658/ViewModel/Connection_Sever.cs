@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using _1312658.Properties;
+using Newtonsoft.Json.Linq;
 using Quobject.SocketIoClientDotNet.Client;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,7 @@ namespace _1312658.ViewModel
             m_NameHuman = nameHuman;
             if (m_NameHuman == null)
                 m_NameHuman = "Anh Tuấn";
-            socket = IO.Socket("ws://gomoku-lajosveres.rhcloud.com:8000");
+            socket = IO.Socket(Settings.Default.IP);
             socket.On(Socket.EVENT_CONNECT, () => {  });
             // Nhận 
             socket.On(Socket.EVENT_MESSAGE, (data) =>{  });

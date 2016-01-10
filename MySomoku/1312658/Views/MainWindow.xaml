@@ -14,7 +14,7 @@
         </Grid.ColumnDefinitions>
         <Button x:Name="btn_Pause"  Margin="0,0,675,631" FontSize="20" FontWeight="Bold" Click="btn_Pause_Click">
             <StackPanel Height="49" Width="63">
-                <Image Source="Picture/Pause.png" Height="48" Width="57" Margin="3,0" RenderTransformOrigin="0.5,0.5" />
+                <Image Source="Picture/Pause.png" Height="46" Margin="3,0" RenderTransformOrigin="0.5,0.5" />
             </StackPanel>
         </Button>
         <Label x:Name="label" Content="    Gomoku Five in a row - multiplayer" HorizontalAlignment="Left" Margin="-70,33,0,0" VerticalAlignment="Top" Width="1221" FontFamily="Yu Gothic UI Semibold" FontSize="70" Height="111" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2">

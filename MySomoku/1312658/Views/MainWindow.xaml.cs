@@ -35,10 +35,13 @@ namespace _1312658.Views
             ChessBoardMain.message_changed += OnShowMessage; // Sự kiện Nhận nt online
             ChatMain.ChangeName_changed += OnChangeName;  // Sự kiện thay đổi tên
             ChatMain.SenMessageSever_changed += OnSentMessage; // sự kiện gởi tn online
+            ChessBoardMain.Exit_changed += OnExitGame; // Thoát khi kết thúc màn chơi
 
             FrmPause.exitGame += OnExitGame; // sự kiện thoát game
             FrmPause.newGame += OnNewGame; // sự kiện new game
         }
+
+
 
         private void OnNewGame()
         {
