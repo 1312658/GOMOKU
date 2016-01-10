@@ -1,19 +1,8 @@
-﻿using _1312658.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-
 namespace _1312658.Views
 {
 
@@ -22,59 +11,82 @@ namespace _1312658.Views
     /// </summary>
     public partial class MainWindow : Window
     {
-        String m_Message;
+        string m_Message { get; set; }
+        public int m_TypePlay { get; set; }
 
-        public MainWindow()
+        private frmPause FrmPause = new frmPause();
+        //private Frm_Menu FrmMenu = new Frm_Menu();
+        public MainWindow(int m_type)
         {
             InitializeComponent();
-            rab_HumanHuman.IsChecked = true;
-            ChessBoard.HaveWin += new ChessBoard.HaveWinEventHander(XuLyWin);
+
+            ChessBoardMain.m_TypePlay = m_type;
+
+            ChatMain.m_TypePlay = m_type;
+            
+            ChessBoardMain.m_NameHuman = ChatMain.m_NameHuman;
+            
+            m_TypePlay = m_type;
+
+            if (StartGame != null)
+                StartGame(m_TypePlay);
+
+            ChatMain.ChatWeCome(m_TypePlay);
+            ChessBoardMain.message_changed += OnShowMessage; // Sự kiện Nhận nt online
+            ChatMain.ChangeName_changed += OnChangeName;  // Sự kiện thay đổi tên
+            ChatMain.SenMessageSever_changed += OnSentMessage; // sự kiện gởi tn online
+
+            FrmPause.exitGame += OnExitGame; // sự kiện thoát game
+            FrmPause.newGame += OnNewGame; // sự kiện new game
         }
 
-        void XuLyWin()
+        private void OnNewGame()
         {
-            Close();
+            ChessBoardMain.ResetBoard();
         }
-
-        private void btn_Chane_Click(object sender, RoutedEventArgs e)
+        private void OnExitGame()
         {
-            m_Message += "\nSERVER\n Welcome ";
-            m_Message += txt_Your_Name.Text.ToString() + "!!!!\n" + DateTime.Now.ToString() + "\n -------------------------------------";
-            txt_Chat.Text = m_Message; 
+            this.Close();
         }
 
-        private void btn_Send_Click(object sender, RoutedEventArgs e)
+        private void OnChangeName(string name)
         {
-            if (txt_Input_Chat.Text != "")
-            {
-                m_Message += "\n" + txt_Your_Name.Text.ToString() + ": " + txt_Input_Chat.Text.ToString() + "\n" + DateTime.Now.ToString() + "\n -------------------------------------";
-                txt_Input_Chat.Text = "";
-                txt_Chat.Text = m_Message;
-            }
+            ChessBoardMain.ChangeName(name);
         }
 
-        private void rab_HumanHuman_Checked(object sender, RoutedEventArgs e)
+        private void OnSentMessage(string Message)
         {
-            ChessBoard.TypePlay = 0;
-            ChessBoard.my_Row_R1.TypePlay = 0;
-
+            ChessBoardMain.Chat(Message);
         }
 
-        private void rab_HumanCom_Checked(object sender, RoutedEventArgs e)
+        private void OnShowMessage(string message, string namePlayer2)
         {
-            ChessBoard.TypePlay = 1;
-            ChessBoard.my_Row_R1.TypePlay = 1;
-            ChessBoard.my_Row_R2.TypePlay = 1;
-            ChessBoard.my_Row_R3.TypePlay = 1;
-            ChessBoard.my_Row_R4.TypePlay = 1;
-            ChessBoard.my_Row_R5.TypePlay = 1;
-            ChessBoard.my_Row_R6.TypePlay = 1;
-            ChessBoard.my_Row_R7.TypePlay = 1;
-            ChessBoard.my_Row_R8.TypePlay = 1;
-            ChessBoard.my_Row_R9.TypePlay = 1;
-            ChessBoard.my_Row_R10.TypePlay = 1;
-            ChessBoard.my_Row_R11.TypePlay = 1;
-            ChessBoard.my_Row_R12.TypePlay = 1;
+            ChatMain.ShowChat(message, namePlayer2);
         }
+
+        private void btn_Pause_Click(object sender, RoutedEventArgs e)
+        {
+            Image img = new Image();
+            img.Source = new BitmapImage(new Uri("Picture/Start.png", UriKind.RelativeOrAbsolute));
+            StackPanel stackPnl = new StackPanel();
+            stackPnl.Orientation = Orientation.Horizontal;
+            stackPnl.Margin = new Thickness(1);
+            stackPnl.Children.Add(img);
+            btn_Pause.Content = stackPnl;
+
+            FrmPause.ShowDialog();
+
+            img = new Image();
+            img.Source = new BitmapImage(new Uri("Picture/Pause.png", UriKind.RelativeOrAbsolute));
+            stackPnl = new StackPanel();
+            stackPnl.Orientation = Orientation.Horizontal;
+            stackPnl.Margin = new Thickness(1);
+            stackPnl.Children.Add(img);
+            btn_Pause.Content = stackPnl;
+
+        }
+
+        public delegate void StartGame_ChangedHandler(int m_type);
+        public event StartGame_ChangedHandler StartGame;
     }
 }

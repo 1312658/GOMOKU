@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using _1312658.Properties;
+using System;
 
 namespace _1312658.Model
 {
@@ -13,10 +10,10 @@ namespace _1312658.Model
         private int width;
         public int[,] GiaTri;
         //Contructor
-        public BangLuongGiacBanCo( Board cls)
+        public BangLuongGiacBanCo( ChessBoard cls)
         {
-            height = cls.Row;
-            width = cls.Column;
+            height = Settings.Default.BOARD_SIZE;
+            width = Settings.Default.BOARD_SIZE;
             GiaTri = new int[height, width];
             ResetBoard();
         }
@@ -31,6 +28,7 @@ namespace _1312658.Model
                 }
             }
         }
+
         //Hàm lấy vị trí có giá trị cao nhất trên bàn cờ
         public Node GetMaxNode()
         {

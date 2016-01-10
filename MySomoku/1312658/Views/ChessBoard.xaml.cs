@@ -1,4 +1,5 @@
 ﻿using _1312658.Model;
+using _1312658.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,419 +20,229 @@ namespace _1312658.Views
     /// <summary>
     /// Interaction logic for ChessBoard.xaml
     /// </summary>
+    /// 
+
     public partial class ChessBoard : UserControl
     {
-        Board BanCo = new Board();
-        SolidColorBrush color = Brushes.Yellow;
-        int X, Y;
-        public int TypePlay;
+       // Player player;
+        BoardViewModel boardViewModel;
+        private Connection_Sever socket { get; set; }
+        public string m_message { get; set; }
+        public int m_TypePlay { get; set; }
+
+        public string m_NameHuman { get; set; }
+        CellValues m_player { get; set; }
+
+        CaroButton[,] CaroTable = new CaroButton[12,12]; 
         public ChessBoard()
         {
             InitializeComponent();
-            my_Row_R1.HumanWin();
-            my_Row_R1.ComWin();
-            // Bắt sự kiên thắng
-            my_Row_R1.HaveComWin += new My_Row.HaveComWinEventHander(Win1);
-            my_Row_R1.HaveHumanWin += new My_Row.HaveHumanWinEventHander(Win2);
-            // Bắt sự kiện đổi lượt
-            my_Row_R1.EventHumanDanhXong += new My_Row.HumanDanhXongEventHander(HumanDanhXong);
-            my_Row_R1.EventComDanhXong += new My_Row.ComDanhXongEventHander(ComDanhXong);
-            // Bắt sự kiện lick
-            my_Row_R1.Row1Lick += new My_Row.Row1LickEventHander(HienThiGiaoDien1);
-            my_Row_R2.Row2Lick += new My_Row.Row2LickEventHander(HienThiGiaoDien2);
-            my_Row_R3.Row3Lick += new My_Row.Row3LickEventHander(HienThiGiaoDien3);
-            my_Row_R4.Row4Lick += new My_Row.Row4LickEventHander(HienThiGiaoDien4);
-            my_Row_R5.Row5Lick += new My_Row.Row5LickEventHander(HienThiGiaoDien5);
-            my_Row_R6.Row6Lick += new My_Row.Row6LickEventHander(HienThiGiaoDien6);
-            my_Row_R7.Row7Lick += new My_Row.Row7LickEventHander(HienThiGiaoDien7);
-            my_Row_R8.Row8Lick += new My_Row.Row8LickEventHander(HienThiGiaoDien8);
-            my_Row_R9.Row9Lick += new My_Row.Row9LickEventHander(HienThiGiaoDien9);
-            my_Row_R10.Row10Lick += new My_Row.Row10LickEventHander(HienThiGiaoDien10);
-            my_Row_R11.Row11Lick += new My_Row.Row11LickEventHander(HienThiGiaoDien11);
-            my_Row_R12.Row12Lick += new My_Row.Row12LickEventHander(HienThiGiaoDien12);
+           
+            boardViewModel = new BoardViewModel();
+            boardViewModel.CurrentBoard.OnPlayerWin += CurrentBoard_OnPlayerWin;
+            boardViewModel.CurrentBoard.OnStepp += CurrentBoard_OnStep;
 
-
-            my_Row_R1.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien1);
-            my_Row_R2.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien2);
-            my_Row_R3.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien3);
-            my_Row_R4.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien4);
-            my_Row_R5.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien5);
-            my_Row_R6.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien6);
-            my_Row_R7.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien7);
-            my_Row_R8.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien8);
-            my_Row_R9.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien9);
-            my_Row_R10.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien10);
-            my_Row_R11.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien11);
-            my_Row_R12.WriteChessBoard += new My_Row.WriteChessBoardEventHander(HienThiGiaoDien12);
-
+            Connection();
+            // Nhận event choi online
+            socket.message_changed += OnMessageChanged;
+            socket.SteppChange_changed += OnSteppSever;
+            socket.StartPlayAuToOnline += OnStartAutoOnline;
+            socket.LeftGame += OnLeftGame;
         }
 
-        void HumanDanhXong()
+        public void OnLeftGame()
         {
-            color = Brushes.Red;
+            Connection();
         }
 
-        void ComDanhXong()
+        public void Disconnection()
         {
-            color = Brushes.Black;
+            socket.Disconnected();
         }
-
-
-        // Khai báo sự kiện đã có người thắng cho Main
-        public delegate void HaveWinEventHander();
-        public event HaveWinEventHander HaveWin;
-        public void HaveOnWin()
+       
+        void CurrentBoard_OnStep(int X, int Y)
         {
-            if (HaveWin != null)
+            if (m_TypePlay == 2)
+                this.Dispatcher.Invoke((Action)(() => { CaroTable[Y, X].Content = setPicture("Picture/Player2.png"); }));
+            if(m_TypePlay ==4)
             {
-                HaveWin();
+                this.Dispatcher.Invoke((Action)(() => { CaroTable[Y, X].Content = setPicture("Picture/Player1.png"); }));
+                socket.SendPoint(new Point(X, Y));
             }
         }
 
-        public void HienThiGiaoDien1()
+        void CurrentBoard_OnPlayerWin(CellValues player)
         {
-            if (my_Row_R1.X == 1)
-                my_Row_R1.btn_C1_Y.Background = color;
-            else if (my_Row_R1.X == 2)
-                my_Row_R1.btn_C2_Y.Background = color;
-            else if (my_Row_R1.X == 3)
-                my_Row_R1.btn_C3_Y.Background = color;
-            else if (my_Row_R1.X == 4)
-                my_Row_R1.btn_C4_Y.Background = color;
-            else if (my_Row_R1.X == 5)
-                my_Row_R1.btn_C5_Y.Background = color;
-            else if (my_Row_R1.X == 6)
-                my_Row_R1.btn_C6_Y.Background = color;
-            else if (my_Row_R1.X == 7)
-                my_Row_R1.btn_C7_Y.Background = color;
-            else if (my_Row_R1.X == 8)
-                my_Row_R1.btn_C8_Y.Background = color;
-            else if (my_Row_R1.X == 9)
-                my_Row_R1.btn_C9_Y.Background = color;
-            else if (my_Row_R1.X == 10)
-                my_Row_R1.btn_C10_Y.Background = color;
-            else if (my_Row_R1.X == 11)
-                my_Row_R1.btn_C11_Y.Background = color;
-            else if (my_Row_R1.X == 12)
-                my_Row_R1.btn_C12_Y.Background = color;
+            MessageBox.Show(player.ToString() + "win !");
+            MessageBoxResult dialogResult = MessageBox.Show("Bạn có muốn chơi lại??? ", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+            if (dialogResult == MessageBoxResult.Yes)
+            {
+                if (m_TypePlay == 1 || m_TypePlay == 2)
+                    ResetBoard();
+                else
+                {
+                    socket.Disconnected();
+                    ResetBoard();
+                    Connection();
+                }
+            }
         }
 
-        public void HienThiGiaoDien2()
+        private StackPanel setPicture(string picture)
         {
-            if (my_Row_R2.X == 1)
-                my_Row_R2.btn_C1_Y.Background = color;
-            else if (my_Row_R2.X == 2)
-                my_Row_R2.btn_C2_Y.Background = color;
-            else if (my_Row_R2.X == 3)
-                my_Row_R2.btn_C3_Y.Background = color;
-            else if (my_Row_R2.X == 4)
-                my_Row_R2.btn_C4_Y.Background = color;
-            else if (my_Row_R2.X == 5)
-                my_Row_R2.btn_C5_Y.Background = color;
-            else if (my_Row_R2.X == 6)
-                my_Row_R2.btn_C6_Y.Background = color;
-            else if (my_Row_R2.X == 7)
-                my_Row_R2.btn_C7_Y.Background = color;
-            else if (my_Row_R2.X == 8)
-                my_Row_R2.btn_C8_Y.Background = color;
-            else if (my_Row_R2.X == 9)
-                my_Row_R2.btn_C9_Y.Background = color;
-            else if (my_Row_R2.X == 10)
-                my_Row_R2.btn_C10_Y.Background = color;
-            else if (my_Row_R2.X == 11)
-                my_Row_R2.btn_C11_Y.Background = color;
-            else if (my_Row_R2.X == 12)
-                my_Row_R2.btn_C12_Y.Background = color;
+
+            Image img = new Image();
+            img.Source = new BitmapImage(new Uri(picture, UriKind.RelativeOrAbsolute));
+            StackPanel stackPnl = new StackPanel();
+            stackPnl.Orientation = Orientation.Horizontal;
+            stackPnl.Margin = new Thickness(1);
+            stackPnl.Children.Add(img);
+            return stackPnl;
         }
 
-        public void HienThiGiaoDien3()
+        public void ResetBoard()
         {
-            if (my_Row_R3.X == 1)
-                my_Row_R3.btn_C1_Y.Background = color;
-            else if (my_Row_R3.X == 2)
-                my_Row_R3.btn_C2_Y.Background = color;
-            else if (my_Row_R3.X == 3)
-                my_Row_R3.btn_C3_Y.Background = color;
-            else if (my_Row_R3.X == 4)
-                my_Row_R3.btn_C4_Y.Background = color;
-            else if (my_Row_R3.X == 5)
-                my_Row_R3.btn_C5_Y.Background = color;
-            else if (my_Row_R3.X == 6)
-                my_Row_R3.btn_C6_Y.Background = color;
-            else if (my_Row_R3.X == 7)
-                my_Row_R3.btn_C7_Y.Background = color;
-            else if (my_Row_R3.X == 8)
-                my_Row_R3.btn_C8_Y.Background = color;
-            else if (my_Row_R3.X == 9)
-                my_Row_R3.btn_C9_Y.Background = color;
-            else if (my_Row_R3.X == 10)
-                my_Row_R3.btn_C10_Y.Background = color;
-            else if (my_Row_R3.X == 11)
-                my_Row_R3.btn_C11_Y.Background = color;
-            else if (my_Row_R3.X == 12)
-                my_Row_R3.btn_C12_Y.Background = color;
+            boardViewModel.CurrentBoard.ResetBoard();
+            var brush1 = new ImageBrush();
+            brush1.ImageSource = new BitmapImage(new Uri("Picture/c.png", UriKind.RelativeOrAbsolute));
+
+            for (int i = 0; i < 12; i++ )
+            {
+                for(int j = 0; j < 12; j++)
+                    this.Dispatcher.Invoke((Action)(() => { wpnBanCo.Children.Remove(CaroTable[i, j]); }));
+            }
+
+            for (int i = 0; i < 12; i++)
+                for (int j = 0; j < 12; j++)
+                {
+                    CaroTable[i, j] = new CaroButton();
+                    CaroTable[i, j].m_X = i;
+                    CaroTable[i, j].m_Y = j;
+                    CaroTable[i, j].Background = brush1;
+                    CaroTable[i, j].Width = 40;
+                    CaroTable[i, j].Height = 40;
+                    wpnBanCo.Children.Add(CaroTable[i, j]);
+                    CaroTable[i, j].Click += CaroButtonTable_Click;
+                }
         }
 
-        public void HienThiGiaoDien4()
+        private void CaroButtonTable_Click(object sender, RoutedEventArgs e)
         {
-            if (my_Row_R4.X == 1)
-                my_Row_R4.btn_C1_Y.Background = color;
-            else if (my_Row_R4.X == 2)
-                my_Row_R4.btn_C2_Y.Background = color;
-            else if (my_Row_R4.X == 3)
-                my_Row_R4.btn_C3_Y.Background = color;
-            else if (my_Row_R4.X == 4)
-                my_Row_R4.btn_C4_Y.Background = color;
-            else if (my_Row_R4.X == 5)
-                my_Row_R4.btn_C5_Y.Background = color;
-            else if (my_Row_R4.X == 6)
-                my_Row_R4.btn_C6_Y.Background = color;
-            else if (my_Row_R4.X == 7)
-                my_Row_R4.btn_C7_Y.Background = color;
-            else if (my_Row_R4.X == 8)
-                my_Row_R4.btn_C8_Y.Background = color;
-            else if (my_Row_R4.X == 9)
-                my_Row_R4.btn_C9_Y.Background = color;
-            else if (my_Row_R4.X == 10)
-                my_Row_R4.btn_C10_Y.Background = color;
-            else if (my_Row_R4.X == 11)
-                my_Row_R4.btn_C11_Y.Background = color;
-            else if (my_Row_R4.X == 12)
-                my_Row_R4.btn_C12_Y.Background = color;
+            CaroButton cell = (CaroButton)sender;
+
+
+            if(boardViewModel.CurrentBoard.CheckNone(cell.Y, cell.X))
+            {
+                if (m_TypePlay == 1)
+                {
+                    if (boardViewModel.CurrentBoard.ActivePlayer == CellValues.Player1)
+                        cell.Content = setPicture("Picture/Player1.png");
+
+                    else
+                        cell.Content = setPicture("Picture/Player2.png");
+                    boardViewModel.CurrentBoard.PlayAt(cell.Y, cell.X, m_TypePlay);
+                }
+                else if (m_TypePlay == 2)
+                {
+                    cell.Content = setPicture("Picture/Player1.png");
+                    boardViewModel.CurrentBoard.PlayAt(cell.Y, cell.X, m_TypePlay);
+                }
+
+                else if(m_TypePlay == 3 && m_player == CellValues.Player1)
+                {
+                    if(socket.m_StartGame == true)
+                    {
+                        cell.Content = setPicture("Picture/Player1.png");
+                        socket.SendPoint(new Point(cell.Y, cell.X));
+                        m_player = CellValues.Player2;
+                    }
+                }
+            }
         }
 
-        public void HienThiGiaoDien5()
+        // Kết nối với sever
+        public void Connection()
         {
-            if (my_Row_R5.X == 1)
-                my_Row_R5.btn_C1_Y.Background = color;
-            else if (my_Row_R5.X == 2)
-                my_Row_R5.btn_C2_Y.Background = color;
-            else if (my_Row_R5.X == 3)
-                my_Row_R5.btn_C3_Y.Background = color;
-            else if (my_Row_R5.X == 4)
-                my_Row_R5.btn_C4_Y.Background = color;
-            else if (my_Row_R5.X == 5)
-                my_Row_R5.btn_C5_Y.Background = color;
-            else if (my_Row_R5.X == 6)
-                my_Row_R5.btn_C6_Y.Background = color;
-            else if (my_Row_R5.X == 7)
-                my_Row_R5.btn_C7_Y.Background = color;
-            else if (my_Row_R5.X == 8)
-                my_Row_R5.btn_C8_Y.Background = color;
-            else if (my_Row_R5.X == 9)
-                my_Row_R5.btn_C9_Y.Background = color;
-            else if (my_Row_R5.X == 10)
-                my_Row_R5.btn_C10_Y.Background = color;
-            else if (my_Row_R5.X == 11)
-                my_Row_R5.btn_C11_Y.Background = color;
-            else if (my_Row_R5.X == 12)
-                my_Row_R5.btn_C12_Y.Background = color;
+            socket = new Connection_Sever(m_NameHuman);
+            socket.addOn();
+            //if (socket.m_isFrist)
+            //    m_player = CellValues.Player1;
+            //else m_player = CellValues.Player2;
         }
 
-        public void HienThiGiaoDien6()
+        public void ChangeName(string name)
         {
-            if (my_Row_R6.X == 1)
-                my_Row_R6.btn_C1_Y.Background = color;
-            else if (my_Row_R6.X == 2)
-                my_Row_R6.btn_C2_Y.Background = color;
-            else if (my_Row_R6.X == 3)
-                my_Row_R6.btn_C3_Y.Background = color;
-            else if (my_Row_R6.X == 4)
-                my_Row_R6.btn_C4_Y.Background = color;
-            else if (my_Row_R6.X == 5)
-                my_Row_R6.btn_C5_Y.Background = color;
-            else if (my_Row_R6.X == 6)
-                my_Row_R6.btn_C6_Y.Background = color;
-            else if (my_Row_R6.X == 7)
-                my_Row_R6.btn_C7_Y.Background = color;
-            else if (my_Row_R6.X == 8)
-                my_Row_R6.btn_C8_Y.Background = color;
-            else if (my_Row_R6.X == 9)
-                my_Row_R6.btn_C9_Y.Background = color;
-            else if (my_Row_R6.X == 10)
-                my_Row_R6.btn_C10_Y.Background = color;
-            else if (my_Row_R6.X == 11)
-                my_Row_R6.btn_C11_Y.Background = color;
-            else if (my_Row_R6.X == 12)
-                my_Row_R6.btn_C12_Y.Background = color;
+            socket.ChangeName(name);
         }
 
-        public void HienThiGiaoDien7()
+        public void Chat(string message)
         {
-            if (my_Row_R7.X == 1)
-                my_Row_R7.btn_C1_Y.Background = color;
-            else if (my_Row_R7.X == 2)
-                my_Row_R7.btn_C2_Y.Background = color;
-            else if (my_Row_R7.X == 3)
-                my_Row_R7.btn_C3_Y.Background = color;
-            else if (my_Row_R7.X == 4)
-                my_Row_R7.btn_C4_Y.Background = color;
-            else if (my_Row_R7.X == 5)
-                my_Row_R7.btn_C5_Y.Background = color;
-            else if (my_Row_R7.X == 6)
-                my_Row_R7.btn_C6_Y.Background = color;
-            else if (my_Row_R7.X == 7)
-                my_Row_R7.btn_C7_Y.Background = color;
-            else if (my_Row_R7.X == 8)
-                my_Row_R7.btn_C8_Y.Background = color;
-            else if (my_Row_R7.X == 9)
-                my_Row_R7.btn_C9_Y.Background = color;
-            else if (my_Row_R7.X == 10)
-                my_Row_R7.btn_C10_Y.Background = color;
-            else if (my_Row_R7.X == 11)
-                my_Row_R7.btn_C11_Y.Background = color;
-            else if (my_Row_R7.X == 12)
-                my_Row_R7.btn_C12_Y.Background = color;
+            socket.chat(message);
         }
 
-        public void HienThiGiaoDien8()
+        public void OnMessageChanged(string message)
         {
-            if (my_Row_R8.X == 1)
-                my_Row_R8.btn_C1_Y.Background = color;
-            else if (my_Row_R8.X == 2)
-                my_Row_R8.btn_C2_Y.Background = color;
-            else if (my_Row_R8.X == 3)
-                my_Row_R8.btn_C3_Y.Background = color;
-            else if (my_Row_R8.X == 4)
-                my_Row_R8.btn_C4_Y.Background = color;
-            else if (my_Row_R8.X == 5)
-                my_Row_R8.btn_C5_Y.Background = color;
-            else if (my_Row_R8.X == 6)
-                my_Row_R8.btn_C6_Y.Background = color;
-            else if (my_Row_R8.X == 7)
-                my_Row_R8.btn_C7_Y.Background = color;
-            else if (my_Row_R8.X == 8)
-                my_Row_R8.btn_C8_Y.Background = color;
-            else if (my_Row_R8.X == 9)
-                my_Row_R8.btn_C9_Y.Background = color;
-            else if (my_Row_R8.X == 10)
-                my_Row_R8.btn_C10_Y.Background = color;
-            else if (my_Row_R8.X == 11)
-                my_Row_R8.btn_C11_Y.Background = color;
-            else if (my_Row_R8.X == 12)
-                my_Row_R8.btn_C12_Y.Background = color;
+            string namePlayer2 = socket.m_NameSever;
+            message_changed(message, namePlayer2);
         }
 
-        public void HienThiGiaoDien9()
+        public void OnSteppSever(Point step)
         {
-            if (my_Row_R9.X == 1)
-                my_Row_R9.btn_C1_Y.Background = color;
-            else if (my_Row_R9.X == 2)
-                my_Row_R9.btn_C2_Y.Background = color;
-            else if (my_Row_R9.X == 3)
-                my_Row_R9.btn_C3_Y.Background = color;
-            else if (my_Row_R9.X == 4)
-                my_Row_R9.btn_C4_Y.Background = color;
-            else if (my_Row_R9.X == 5)
-                my_Row_R9.btn_C5_Y.Background = color;
-            else if (my_Row_R9.X == 6)
-                my_Row_R9.btn_C6_Y.Background = color;
-            else if (my_Row_R9.X == 7)
-                my_Row_R9.btn_C7_Y.Background = color;
-            else if (my_Row_R9.X == 8)
-                my_Row_R9.btn_C8_Y.Background = color;
-            else if (my_Row_R9.X == 9)
-                my_Row_R9.btn_C9_Y.Background = color;
-            else if (my_Row_R9.X == 10)
-                my_Row_R9.btn_C10_Y.Background = color;
-            else if (my_Row_R9.X == 11)
-                my_Row_R9.btn_C11_Y.Background = color;
-            else if (my_Row_R9.X == 12)
-                my_Row_R9.btn_C12_Y.Background = color;
+            this.Dispatcher.Invoke((Action)(() => { CaroTable[(int)step.Y, (int)step.X].Content = setPicture("Picture/Player2.png"); }));
+            if (m_TypePlay == 4)
+            {
+                boardViewModel.CurrentBoard.PlayAt((int)step.X, (int)step.Y, 2);
+            }
+            m_player = CellValues.Player1;
         }
 
-        public void HienThiGiaoDien10()
+        // thực hiện chơi online auto
+        public void OnStartAutoOnline(bool is_First)
         {
-            if (my_Row_R10.X == 1)
-                my_Row_R10.btn_C1_Y.Background = color;
-            else if (my_Row_R10.X == 2)
-                my_Row_R10.btn_C2_Y.Background = color;
-            else if (my_Row_R10.X == 3)
-                my_Row_R10.btn_C3_Y.Background = color;
-            else if (my_Row_R10.X == 4)
-                my_Row_R10.btn_C4_Y.Background = color;
-            else if (my_Row_R10.X == 5)
-                my_Row_R10.btn_C5_Y.Background = color;
-            else if (my_Row_R10.X == 6)
-                my_Row_R10.btn_C6_Y.Background = color;
-            else if (my_Row_R10.X == 7)
-                my_Row_R10.btn_C7_Y.Background = color;
-            else if (my_Row_R10.X == 8)
-                my_Row_R10.btn_C8_Y.Background = color;
-            else if (my_Row_R10.X == 9)
-                my_Row_R10.btn_C9_Y.Background = color;
-            else if (my_Row_R10.X == 10)
-                my_Row_R10.btn_C10_Y.Background = color;
-            else if (my_Row_R10.X == 11)
-                my_Row_R10.btn_C11_Y.Background = color;
-            else if (my_Row_R10.X == 12)
-                my_Row_R10.btn_C12_Y.Background = color;
+            if(m_TypePlay ==4)
+            {
+                if (is_First)
+                {
+                    Point stepAuto = new Point(6, 6);
+                    this.Dispatcher.Invoke((Action)(() =>
+                    {
+                        CaroTable[(int)stepAuto.Y, (int)stepAuto.X].Content = setPicture("Picture/Player1.png");
+                    }));
+                    socket.SendPoint(stepAuto);
+                }
+            }
+
+            if (m_TypePlay == 3)
+            {
+                if (is_First)
+                    m_player = CellValues.Player1;
+                else
+                    m_player = CellValues.Player2;
+            }
         }
 
-        public void HienThiGiaoDien11()
-        {
-            if (my_Row_R11.X == 1)
-                my_Row_R11.btn_C1_Y.Background = color;
-            else if (my_Row_R11.X == 2)
-                my_Row_R11.btn_C2_Y.Background = color;
-            else if (my_Row_R11.X == 3)
-                my_Row_R11.btn_C3_Y.Background = color;
-            else if (my_Row_R11.X == 4)
-                my_Row_R11.btn_C4_Y.Background = color;
-            else if (my_Row_R11.X == 5)
-                my_Row_R11.btn_C5_Y.Background = color;
-            else if (my_Row_R11.X == 6)
-                my_Row_R11.btn_C6_Y.Background = color;
-            else if (my_Row_R11.X == 7)
-                my_Row_R11.btn_C7_Y.Background = color;
-            else if (my_Row_R11.X == 8)
-                my_Row_R11.btn_C8_Y.Background = color;
-            else if (my_Row_R11.X == 9)
-                my_Row_R11.btn_C9_Y.Background = color;
-            else if (my_Row_R11.X == 10)
-                my_Row_R11.btn_C10_Y.Background = color;
-            else if (my_Row_R11.X == 11)
-                my_Row_R11.btn_C11_Y.Background = color;
-            else if (my_Row_R11.X == 12)
-                my_Row_R11.btn_C12_Y.Background = color;
-        }
 
-        public void HienThiGiaoDien12()
+        public delegate void Message_ChangedHandler(String mesage, string namePlayer2);
+        public event Message_ChangedHandler message_changed;
+
+        private void wpnBanCo_Loaded(object sender, RoutedEventArgs e)
         {
-            if (my_Row_R12.X == 1)
-                my_Row_R12.btn_C1_Y.Background = color;
-            else if (my_Row_R12.X == 2)
-                my_Row_R12.btn_C2_Y.Background = color;
-            else if (my_Row_R12.X == 3)
-                my_Row_R12.btn_C3_Y.Background = color;
-            else if (my_Row_R12.X == 4)
-                my_Row_R12.btn_C4_Y.Background = color;
-            else if (my_Row_R12.X == 5)
-                my_Row_R12.btn_C5_Y.Background = color;
-            else if (my_Row_R12.X == 6)
-                my_Row_R12.btn_C6_Y.Background = color;
-            else if (my_Row_R12.X == 7)
-                my_Row_R12.btn_C7_Y.Background = color;
-            else if (my_Row_R12.X == 8)
-                my_Row_R12.btn_C8_Y.Background = color;
-            else if (my_Row_R12.X == 9)
-                my_Row_R12.btn_C9_Y.Background = color;
-            else if (my_Row_R12.X == 10)
-                my_Row_R12.btn_C10_Y.Background = color;
-            else if (my_Row_R12.X == 11)
-                my_Row_R12.btn_C11_Y.Background = color;
-            else if (my_Row_R12.X == 12)
-                my_Row_R12.btn_C12_Y.Background = color;
-        }
-        public void Win1()
-        {
-            MessageBox.Show("Đen Thắng!!!");
-            HaveOnWin();
-        }
-        public void Win2()
-        {
-            MessageBox.Show("Đỏ Thắng!!!");
-            HaveOnWin();
+            var brush1 = new ImageBrush();
+            brush1.ImageSource = new BitmapImage(new Uri("Picture/c.png", UriKind.RelativeOrAbsolute));
+            var brush2 = new ImageBrush();
+            brush2.ImageSource = new BitmapImage(new Uri("Picture/c.png", UriKind.RelativeOrAbsolute));
+            for (int i = 0; i < 12; i++)
+                for (int j = 0; j < 12; j++)
+                {
+                    CaroTable[i, j] = new CaroButton();
+                    CaroTable[i, j].m_X = i;
+                    CaroTable[i, j].m_Y = j;
+                    CaroTable[i, j].Background = brush1;
+                    CaroTable[i, j].Width = 40;
+                    CaroTable[i, j].Height = 40;
+                    wpnBanCo.Children.Add(CaroTable[i, j]);
+                    CaroTable[i, j].Click += CaroButtonTable_Click;
+                }
         }
     }
 }

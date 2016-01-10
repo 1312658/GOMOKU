@@ -7,10 +7,13 @@ using System.Threading.Tasks;
 
 namespace _1312658.ViewModel
 {
-    public class Boarding
+    class BoardViewModel
     {
-        Board BanCo = new Board();
-        
+        public ChessBoard CurrentBoard{get; set;}
 
+        public BoardViewModel()
+        {
+            CurrentBoard = new ChessBoard();
+        }
     }
 }

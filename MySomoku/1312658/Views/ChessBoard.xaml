@@ -5,32 +5,11 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:_1312658.Views"
              mc:Ignorable="d" Height="362.039" Width="360.602">
-    <Grid Margin="0,1,1,1" >
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <local:My_Row x:Name="my_Row_R1" Y="1" Width="Auto" Height="Auto" />
-        <local:My_Row x:Name="my_Row_R2" Y="2" Width="Auto" Height="Auto" Grid.Row="1" />
-        <local:My_Row x:Name="my_Row_R3" Y="3" Width="Auto" Height="Auto" Grid.Row="2" />
-        <local:My_Row x:Name="my_Row_R4" Y="4" Width="Auto" Height="Auto" Grid.Row="3" />
-        <local:My_Row x:Name="my_Row_R5" Y="5" Width="Auto" Height="Auto" Grid.Row="4" />
-        <local:My_Row x:Name="my_Row_R6" Y="6" Width="Auto" Height="Auto" Grid.Row="5" />
-        <local:My_Row x:Name="my_Row_R7" Y="7" Width="Auto" Height="Auto" Grid.Row="6" />
-        <local:My_Row x:Name="my_Row_R8" Y="8" Width="Auto" Height="Auto" Grid.Row="7" />
-        <local:My_Row x:Name="my_Row_R9" Y="9" Width="Auto" Height="Auto" Grid.Row="8" />
-        <local:My_Row x:Name="my_Row_R10" Y="10" Width="Auto" Height="Auto" Grid.Row="9" />
-        <local:My_Row x:Name="my_Row_R11" Y="11" Width="Auto" Height="Auto" Grid.Row="10"  />
-        <local:My_Row x:Name="my_Row_R12" Y="12" Width="Auto" Height="Auto" Grid.Row="11" />
+    <Grid x:Name="BoardView" Margin="0,1,-1,-1" RenderTransformOrigin="0.5,0.5" Background="#FFF9F9F9" >
+        <Viewbox Stretch="Uniform">
+            <Grid Height="480" Width="480">
+                <WrapPanel x:Name="wpnBanCo" Loaded="wpnBanCo_Loaded"/>
+            </Grid>
+        </Viewbox>
     </Grid>
 </UserControl>
