@@ -2,6 +2,7 @@
 using _1312658.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,14 +23,16 @@ namespace _1312658.Views
     /// </summary>
     /// 
 
+
     public partial class ChessBoard : UserControl
     {
        // Player player;
         BoardViewModel boardViewModel;
-        private Connection_Sever socket { get; set; }
+        public Connection_Sever socket { get; set; }
         public string m_message { get; set; }
         public int m_TypePlay { get; set; }
 
+       // static BackgroundWorker bw = new BackgroundWorker();
         public string m_NameHuman { get; set; }
         CellValues m_player { get; set; }
 
@@ -48,11 +51,19 @@ namespace _1312658.Views
             socket.SteppChange_changed += OnSteppSever;
             socket.StartPlayAuToOnline += OnStartAutoOnline;
             socket.LeftGame += OnLeftGame;
+            socket.winGame += OnWinGame;
         }
 
         public void OnLeftGame()
         {
-            Connection();
+            this.Dispatcher.Invoke((Action)(() =>
+            {
+                Frm_Menu menu = new Frm_Menu();
+                if (Exit_changed != null)
+                    Exit_changed();
+                menu.ShowDialog();
+                socket.Disconnected();
+            }));
         }
 
         public void Disconnection()
@@ -71,16 +82,48 @@ namespace _1312658.Views
             }
         }
 
+        private void OnWinGame(List<Point> winArray, string nameWin)
+        {
+            showWinArray(winArray);
+            MessageBox.Show(nameWin + " win !");
+            this.Dispatcher.Invoke((Action)(() => {
+                Frm_Menu menu = new Frm_Menu();
+                if (Exit_changed != null)
+                    Exit_changed();
+                menu.ShowDialog();
+                socket.Disconnected();
+            }));
+        }
+
+        private void showWinArray(List<Point> win)
+        {
+            foreach(Point a in win)
+            {
+                this.Dispatcher.Invoke((Action)(() => { CaroTable[(int)a.X, (int)a.Y].Background = Brushes.Yellow; }));
+            }
+        }
+
         void CurrentBoard_OnPlayerWin(CellValues player)
         {
-            MessageBox.Show(player.ToString() + "win !");
-            try
+            if (m_TypePlay == 1 || m_TypePlay == 2)
             {
-                if (m_TypePlay == 1 || m_TypePlay == 2)
+                MessageBox.Show(player.ToString() + "win !");
+                showWinArray(boardViewModel.CurrentBoard.winArray);
+                try
                 {
-                    MessageBoxResult dialogResult = MessageBox.Show("Bạn có muốn chơi lại??? ", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                    if (dialogResult == MessageBoxResult.Yes)
-                        ResetBoard();
+                    if (m_TypePlay == 1 || m_TypePlay == 2)
+                    {
+                        MessageBoxResult dialogResult = MessageBox.Show("Bạn có muốn chơi lại??? ", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                        if (dialogResult == MessageBoxResult.Yes)
+                            ResetBoard();
+                        else
+                        {
+                            Frm_Menu menu = new Frm_Menu();
+                            if (Exit_changed != null)
+                                Exit_changed();
+                            menu.ShowDialog();
+                        }
+                    }
                     else
                     {
                         Frm_Menu menu = new Frm_Menu();
@@ -89,17 +132,10 @@ namespace _1312658.Views
                         menu.ShowDialog();
                     }
                 }
-                else
+                catch
                 {
-                    Frm_Menu menu = new Frm_Menu();
-                    if (Exit_changed != null)
-                        Exit_changed();
-                    menu.ShowDialog();
+                    MessageBox.Show("Bạn không thể tiếp tục!");
                 }
-            }
-            catch
-            {
-                MessageBox.Show("Bạn không thể tiếp tục!");
             }
         }
 

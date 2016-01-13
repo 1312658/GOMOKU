@@ -41,8 +41,6 @@ namespace _1312658.Views
             FrmPause.newGame += OnNewGame; // sự kiện new game
         }
 
-
-
         private void OnNewGame()
         {
             ChessBoardMain.ResetBoard();
@@ -50,6 +48,8 @@ namespace _1312658.Views
         private void OnExitGame()
         {
             this.Close();
+            if (m_TypePlay == 3 || m_TypePlay == 4)
+                ChessBoardMain.socket.Disconnected();
         }
 
         private void OnChangeName(string name)

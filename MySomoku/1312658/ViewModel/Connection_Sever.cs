@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace _1312658.ViewModel
 {
-    class Connection_Sever
+    public class Connection_Sever
     {
         public Socket socket;
 
@@ -20,7 +20,8 @@ namespace _1312658.ViewModel
         public bool m_StartGame = false;
         public string m_NameSever { get; set; }
         public string m_NameHuman { get; set; }
-            
+        public List<Point> winArray { get; set; }
+
         public Connection_Sever(string nameHuman)
         {
             m_NameHuman = nameHuman;
@@ -60,6 +61,7 @@ namespace _1312658.ViewModel
                         message_changed(b);
                 }
 
+
                 if (((JObject)data)["message"].ToString() == "Welcome!")
                 {
                     socket.Emit("MyNameIs", m_NameHuman);
@@ -89,9 +91,34 @@ namespace _1312658.ViewModel
                 {
                     message_changed(temp);
                 }
+                if(temp.Contains("won the game!"))
+                {
+                    string nameWin;
+                    if (temp.Contains(m_NameHuman))
+                        nameWin = m_NameHuman;
+                    else nameWin = m_NameSever;
 
-               // if (LeftGame != null)
-                //    LeftGame();
+                    winArray = new List<Point>();
+                    List<JToken> listJToken = ((Newtonsoft.Json.Linq.JObject)data)["highlight"].Children().ToList();
+
+                    foreach (JToken re in listJToken)
+                    {
+                        Point temp1 = new Point();
+
+                        temp1.X = (int)re["row"];
+                        temp1.Y = (int)re["col"];
+                        winArray.Add(temp1);
+                    }
+                    if (winGame != null)
+                        winGame(winArray, nameWin);
+                }
+
+                if (temp.Contains("left the game!"))
+                {
+                    if (LeftGame != null)
+                        LeftGame();
+                }
+              
             });
 
         }
@@ -134,6 +161,7 @@ namespace _1312658.ViewModel
                 socket.Off(Socket.EVENT_ERROR);
                 socket.Off(Socket.EVENT_CONNECT);
                 socket.Disconnect();
+                socket.Close();
             }
         }
 
@@ -159,5 +187,8 @@ namespace _1312658.ViewModel
 
         public delegate void LeftGame_ChangedHandler();
         public event LeftGame_ChangedHandler LeftGame;
+
+        public delegate void win_ChangedHandler(List<Point> winArray, string nameWin);
+        public event win_ChangedHandler winGame;
     }
 }

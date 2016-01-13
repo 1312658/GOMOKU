@@ -26,7 +26,11 @@ namespace _1312658.Model
         public CellValues[,] Cells { get; set; }
         public CellValues ActivePlayer { get; set; }
 
+        public List<Point> winArray { get; set; }
+
+        public delegate void PlayerWinHandler(CellValues player);
         public event PlayerWinHandler OnPlayerWin;
+
         public event SteppCom OnStepp;
 
         public int[] PhongThu = new int[5] { 0, 1, 9, 85, 769 };
@@ -46,6 +50,8 @@ namespace _1312658.Model
 
         void CheckWin(int row, int col)
         {
+            winArray = new List<Point>();
+            winArray.Add(new Point(col, row));
             if (CountPlayerItem(row, col, 1, 0) >= 5
                || CountPlayerItem(row, col, 0, 1) >= 5
                || CountPlayerItem(row, col, 1, 1) >= 5
@@ -66,7 +72,7 @@ namespace _1312658.Model
 
         public void PlayAt(int row, int col, int m_Type)
         {
-            if(CheckNone(row, col))
+            if (CheckNone(row, col))
             {
                 m_TypePlay = m_Type;
                 Cells[row, col] = ActivePlayer;
@@ -74,7 +80,7 @@ namespace _1312658.Model
                 // Vertiacal check
                 CheckWin(row, col);
 
-                if (m_TypePlay == 1)
+                if (m_TypePlay == 1) // choi thu công
                 {
                     if (ActivePlayer == CellValues.Player1)
                         ActivePlayer = CellValues.Player2;
@@ -84,7 +90,7 @@ namespace _1312658.Model
                     }
                 }
 
-                else if (m_TypePlay == 2)
+                else if (m_TypePlay == 2) // choi voi may
                 {
                     if (ActivePlayer == CellValues.Player1)
                     {
@@ -120,7 +126,7 @@ namespace _1312658.Model
             int r = node.Row;
             int c = node.Column;
             Cells[r, c] = ActivePlayer; //Lưu loại cờ vừa đánh vào mảng
-            return new Point(r,c);
+            return new Point(r, c);
         }
 
         private void LuongGia(CellValues player)
@@ -332,7 +338,7 @@ namespace _1312658.Model
                 }
             }
         }
-        
+
         private int CountPlayerItem(int row, int col, int drow, int dcol)
         {
             int crow = row + drow;
@@ -340,6 +346,9 @@ namespace _1312658.Model
             int count = 1;
             while (IsInBoard(crow, ccol) && Cells[crow, ccol] == ActivePlayer)
             {
+                Point temp = new Point(ccol, crow);
+                winArray.Add(temp);
+
                 count++;
                 crow = crow + drow;
                 ccol = ccol + dcol;
@@ -348,15 +357,18 @@ namespace _1312658.Model
             ccol = col - dcol;
             while (IsInBoard(crow, ccol) && Cells[crow, ccol] == ActivePlayer)
             {
+                Point temp = new Point(ccol, crow);
+                winArray.Add(temp);
+
                 count++;
                 crow = crow - drow;
                 ccol = ccol - dcol;
+
             }
             return count;
         }
-        }
+    }
 
-        public delegate void PlayerWinHandler(CellValues player);
 
     public delegate void SteppCom(int X, int Y);
     public enum CellValues { None = 0, Player1 = 1, Player2 = 2 }
