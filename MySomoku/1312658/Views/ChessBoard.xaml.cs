@@ -74,24 +74,32 @@ namespace _1312658.Views
         void CurrentBoard_OnPlayerWin(CellValues player)
         {
             MessageBox.Show(player.ToString() + "win !");
-            MessageBoxResult dialogResult = MessageBox.Show("Bạn có muốn chơi lại??? ", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            if (dialogResult == MessageBoxResult.Yes)
+            try
             {
                 if (m_TypePlay == 1 || m_TypePlay == 2)
-                    ResetBoard();
+                {
+                    MessageBoxResult dialogResult = MessageBox.Show("Bạn có muốn chơi lại??? ", "Question", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    if (dialogResult == MessageBoxResult.Yes)
+                        ResetBoard();
+                    else
+                    {
+                        Frm_Menu menu = new Frm_Menu();
+                        if (Exit_changed != null)
+                            Exit_changed();
+                        menu.ShowDialog();
+                    }
+                }
                 else
                 {
-                    socket.Disconnected();
-                    ResetBoard();
-                    Connection();
+                    Frm_Menu menu = new Frm_Menu();
+                    if (Exit_changed != null)
+                        Exit_changed();
+                    menu.ShowDialog();
                 }
             }
-            else
+            catch
             {
-                Frm_Menu menu = new Frm_Menu();
-                if (Exit_changed != null)
-                    Exit_changed();
-                menu.ShowDialog();
+                MessageBox.Show("Bạn không thể tiếp tục!");
             }
         }
 
@@ -172,9 +180,6 @@ namespace _1312658.Views
         {
             socket = new Connection_Sever(m_NameHuman);
             socket.addOn();
-            //if (socket.m_isFrist)
-            //    m_player = CellValues.Player1;
-            //else m_player = CellValues.Player2;
         }
 
         public void ChangeName(string name)
@@ -196,6 +201,7 @@ namespace _1312658.Views
         public void OnSteppSever(Point step)
         {
             this.Dispatcher.Invoke((Action)(() => { CaroTable[(int)step.Y, (int)step.X].Content = setPicture("Picture/Player2.png"); }));
+            
             if (m_TypePlay == 4)
             {
                 boardViewModel.CurrentBoard.PlayAt((int)step.X, (int)step.Y, 2);
@@ -211,6 +217,8 @@ namespace _1312658.Views
                 if (is_First)
                 {
                     Point stepAuto = new Point(6, 6);
+                    boardViewModel.CurrentBoard.PlayAt((int)stepAuto.Y, (int)stepAuto.X, m_TypePlay);
+
                     this.Dispatcher.Invoke((Action)(() =>
                     {
                         CaroTable[(int)stepAuto.Y, (int)stepAuto.X].Content = setPicture("Picture/Player1.png");
