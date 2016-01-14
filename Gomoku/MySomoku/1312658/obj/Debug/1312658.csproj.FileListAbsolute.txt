@@ -235,16 +235,17 @@ C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\Source\Gomoku\MySomoku\131265
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\Source\Gomoku\MySomoku\1312658\obj\Debug\1312658.g.resources
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\Source\Gomoku\MySomoku\1312658\obj\Debug\_1312658.Properties.Resources.resources
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\Source\Gomoku\MySomoku\1312658\obj\Debug\1312658.csproj.GenerateResource.Cache
-C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\1312658.exe
-C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\EngineIoClientDotNet.dll
-C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\Newtonsoft.Json.dll
-C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\SocketIoClientDotNet.dll
-C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\WebSocket4Net.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\1312658.exe.config
+C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\1312658.exe
+C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\1312658.pdb
+C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\EngineIoClientDotNet.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\Microsoft.Practices.ServiceLocation.dll
+C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\Newtonsoft.Json.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\Prism.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\Prism.Wpf.dll
+C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\SocketIoClientDotNet.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\WebSocket4Net.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\Microsoft.Practices.ServiceLocation.pdb
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\Microsoft.Practices.ServiceLocation.xml
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\Newtonsoft.Json.xml
@@ -260,6 +261,7 @@ C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySo
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\ru\System.Windows.Interactivity.resources.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
+C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\1312658.csprojResolveAssemblyReference.cache
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\Views\frmPause.baml
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\Views\ChessBoard.g.cs
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\Views\frmPause.g.cs
@@ -279,5 +281,3 @@ C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySo
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\1312658.csproj.GenerateResource.Cache
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\1312658.exe
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\1312658.pdb
-C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\1312658.csprojResolveAssemblyReference.cache
-C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\1312658.pdb

@@ -15,7 +15,6 @@ namespace _1312658.Views
         public int m_TypePlay { get; set; }
 
         private frmPause FrmPause = new frmPause();
-        //private Frm_Menu FrmMenu = new Frm_Menu();
         public MainWindow(int m_type)
         {
             InitializeComponent();
@@ -48,6 +47,10 @@ namespace _1312658.Views
         private void OnExitGame()
         {
             this.Close();
+
+            if (FrmPause != null)
+                FrmPause.Close();
+
             if (m_TypePlay == 3 || m_TypePlay == 4)
                 ChessBoardMain.socket.Disconnected();
         }

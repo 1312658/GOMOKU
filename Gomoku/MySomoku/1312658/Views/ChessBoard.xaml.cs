@@ -32,7 +32,7 @@ namespace _1312658.Views
         public string m_message { get; set; }
         public int m_TypePlay { get; set; }
 
-       // static BackgroundWorker bw = new BackgroundWorker();
+
         public string m_NameHuman { get; set; }
         CellValues m_player { get; set; }
 
@@ -54,10 +54,12 @@ namespace _1312658.Views
             socket.winGame += OnWinGame;
         }
 
+        // xử lý sự kiện khi có người đang kết nối online rồi thoát ra
         public void OnLeftGame()
         {
             this.Dispatcher.Invoke((Action)(() =>
             {
+                MessageBox.Show("Người chơi đã thoát, vui lòng chọn lại!!!");
                 Frm_Menu menu = new Frm_Menu();
                 if (Exit_changed != null)
                     Exit_changed();
@@ -70,7 +72,8 @@ namespace _1312658.Views
         {
             socket.Disconnected();
         }
-       
+
+       // xử lý sự kiện máy auto đã đánh xong
         void CurrentBoard_OnStep(int X, int Y)
         {
             if (m_TypePlay == 2)
@@ -95,6 +98,7 @@ namespace _1312658.Views
             }));
         }
 
+        // xử lý sự kiện showw đường đi chiến thắng.
         private void showWinArray(List<Point> win)
         {
             foreach(Point a in win)
@@ -103,7 +107,10 @@ namespace _1312658.Views
             }
         }
 
-        void CurrentBoard_OnPlayerWin(CellValues player)
+        // sử lý sự kiện có người win
+        // type 1 và 2 -> cho chơi lại
+        // type 3 và 4 -> thoát ra menu
+        private void CurrentBoard_OnPlayerWin(CellValues player)
         {
             if (m_TypePlay == 1 || m_TypePlay == 2)
             {
@@ -151,6 +158,7 @@ namespace _1312658.Views
             return stackPnl;
         }
 
+        // Reset bàn cờ
         public void ResetBoard()
         {
             boardViewModel.CurrentBoard.ResetBoard();
@@ -177,6 +185,7 @@ namespace _1312658.Views
                 }
         }
 
+        // sự kiện lick
         private void CaroButtonTable_Click(object sender, RoutedEventArgs e)
         {
             CaroButton cell = (CaroButton)sender;
@@ -204,10 +213,12 @@ namespace _1312658.Views
                     if(socket.m_StartGame == true)
                     {
                         cell.Content = setPicture("Picture/Player1.png");
+                        boardViewModel.CurrentBoard.PlayAt(cell.Y, cell.X, 1);
                         socket.SendPoint(new Point(cell.Y, cell.X));
                         m_player = CellValues.Player2;
                     }
                 }
+
             }
         }
 
@@ -218,6 +229,7 @@ namespace _1312658.Views
             socket.addOn();
         }
 
+        // xử lý sự kiwwnj đổi tên
         public void ChangeName(string name)
         {
             socket.ChangeName(name);
@@ -228,24 +240,28 @@ namespace _1312658.Views
             socket.chat(message);
         }
 
+        // sử lý sự kiện thay đổi message
         public void OnMessageChanged(string message)
         {
             string namePlayer2 = socket.m_NameSever;
             message_changed(message, namePlayer2);
         }
 
+        // Xử lý sự kiện nhân step từ server
         public void OnSteppSever(Point step)
         {
             this.Dispatcher.Invoke((Action)(() => { CaroTable[(int)step.Y, (int)step.X].Content = setPicture("Picture/Player2.png"); }));
             
-            if (m_TypePlay == 4)
-            {
+            if (m_TypePlay == 4) // choi auto -> chuyen về chơi với máy.
                 boardViewModel.CurrentBoard.PlayAt((int)step.X, (int)step.Y, 2);
-            }
+
+            if (m_TypePlay == 3) // chơi online chuyển về chơi thủ công giữa 2 người.
+                boardViewModel.CurrentBoard.PlayAt((int)step.X, (int)step.Y, 1);
+
             m_player = CellValues.Player1;
         }
 
-        // thực hiện chơi online auto
+        // nhận sự kiện bắt đầu chơi online.
         public void OnStartAutoOnline(bool is_First)
         {
             if(m_TypePlay ==4)
@@ -273,6 +289,7 @@ namespace _1312658.Views
         }
 
 
+        // sự kiện thay đổi message
         public delegate void Message_ChangedHandler(String mesage, string namePlayer2);
         public event Message_ChangedHandler message_changed;
 
@@ -296,6 +313,7 @@ namespace _1312658.Views
                 }
         }
 
+        // sự kiện thoát game khi có người left hoặc 1 trong 2 win
         public delegate void Exit_ChangedHandler();
         public event Exit_ChangedHandler Exit_changed;
     }

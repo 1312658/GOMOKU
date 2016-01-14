@@ -1,6 +1,7 @@
 ﻿using _1312658.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -26,6 +27,7 @@ namespace _1312658.Model
         public CellValues[,] Cells { get; set; }
         public CellValues ActivePlayer { get; set; }
 
+        private Point stepAuto { get; set; }
         public List<Point> winArray { get; set; }
 
         public delegate void PlayerWinHandler(CellValues player);
@@ -38,6 +40,7 @@ namespace _1312658.Model
 
         private BangLuongGiacBanCo eBoard; //Bảng lượng giá bàn cờ
 
+        BackgroundWorker bw = new BackgroundWorker();
         public int m_TypePlay { get; set; }
         public ChessBoard()
         {
@@ -46,9 +49,26 @@ namespace _1312658.Model
             ActivePlayer = CellValues.Player1;
             eBoard = new BangLuongGiacBanCo(this);
             ResetBoard();
+            bw.DoWork += OnDoWork;
+            bw.RunWorkerCompleted += OnRun;
         }
 
-        void CheckWin(int row, int col)
+        private void OnDoWork(object Sender, System.ComponentModel.DoWorkEventArgs e)
+        {
+            ActivePlayer = CellValues.Player2;
+            stepAuto = AutoPlay();
+            Cells[(int)stepAuto.X, (int)stepAuto.Y] = ActivePlayer;
+            OnStepp((int)stepAuto.X, (int)stepAuto.Y);
+        }
+
+        private void OnRun(object Sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        {
+            CheckWin((int)stepAuto.X, (int)stepAuto.Y);
+            ActivePlayer = CellValues.Player1;
+        }
+
+        // kiểm tra chiến thắng.
+        private void CheckWin(int row, int col)
         {
             winArray = new List<Point>();
             winArray.Add(new Point(col, row));
@@ -63,6 +83,7 @@ namespace _1312658.Model
             }
         }
 
+        // kiểm tra ô đang đi hợp lệ hay không
         public bool CheckNone(int row, int col)
         {
             if (Cells[row, col] == CellValues.Player1 || Cells[row, col] == CellValues.Player2)
@@ -70,6 +91,7 @@ namespace _1312658.Model
             else return true;
         }
 
+        // chơi game tại vị trí....
         public void PlayAt(int row, int col, int m_Type)
         {
             if (CheckNone(row, col))
@@ -94,15 +116,19 @@ namespace _1312658.Model
                 {
                     if (ActivePlayer == CellValues.Player1)
                     {
-                        ActivePlayer = CellValues.Player2;
-
-                        Point step = AutoPlay();
-                        Cells[(int)step.X, (int)step.Y] = ActivePlayer;
-                        OnStepp((int)step.X, (int)step.Y);
-
+                        bw.RunWorkerAsync();
                         // Kiem tra thang thua cho com
-                        CheckWin((int)step.X, (int)step.Y);
-                        ActivePlayer = CellValues.Player1;
+
+
+                        //ActivePlayer = CellValues.Player2;
+
+                        //Point step = AutoPlay();
+                        //Cells[(int)step.X, (int)step.Y] = ActivePlayer;
+                        //OnStepp((int)step.X, (int)step.Y);
+
+                        //// Kiem tra thang thua cho com
+                        //CheckWin((int)step.X, (int)step.Y);
+                        //ActivePlayer = CellValues.Player1;
                     }
                     else
                     {
@@ -112,11 +138,13 @@ namespace _1312658.Model
             }
         }
 
+        // kiểm tra nằm trong board
         private bool IsInBoard(int row, int col)
         {
             return row >= 0 && row < BoardSize && col >= 0 && col < BoardSize;
         }
 
+        // chơi auto
         public Point AutoPlay()
         {
             Node node = new Node();
@@ -129,6 +157,7 @@ namespace _1312658.Model
             return new Point(r, c);
         }
 
+        // Sử dụng nguồn từ souce mẫu trên mạng.
         private void LuongGia(CellValues player)
         {
             int cntHuman = 0, cntCom = 0;//Biến đếm Human,Com
@@ -328,6 +357,7 @@ namespace _1312658.Model
             #endregion
         }
 
+        // cho các trị số của bàn cờ trở về lúc khởi tạo
         public void ResetBoard()
         {
             for (int i = 0; i < Settings.Default.BOARD_SIZE; i++)
@@ -339,6 +369,7 @@ namespace _1312658.Model
             }
         }
 
+        // đếm đường đi.
         private int CountPlayerItem(int row, int col, int drow, int dcol)
         {
             int crow = row + drow;
