@@ -19,6 +19,7 @@ namespace _1312658.ViewModel
         public bool m_isFrist = false;
         public bool m_StartGame = false;
         public string m_NameSever { get; set; }
+        public string m_NamePlayer2 { get; set; }
         public string m_NameHuman { get; set; }
         public List<Point> winArray { get; set; }
 
@@ -57,6 +58,7 @@ namespace _1312658.ViewModel
                 else
                 {
                     m_NameSever = a;
+                    //m_NamePlayer2 = a;
                     if (message_changed != null)
                         message_changed(b);
                 }
@@ -146,6 +148,7 @@ namespace _1312658.ViewModel
 
         public void ChangeName(string name)
         {
+            //m_NameHuman = name;
             socket.Emit("MyNameIs", name);
         }
 

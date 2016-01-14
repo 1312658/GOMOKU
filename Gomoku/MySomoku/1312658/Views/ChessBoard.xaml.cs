@@ -244,7 +244,8 @@ namespace _1312658.Views
         public void OnMessageChanged(string message)
         {
             string namePlayer2 = socket.m_NameSever;
-            message_changed(message, namePlayer2);
+            if (message_changed != null)
+                message_changed(message, namePlayer2);
         }
 
         // Xử lý sự kiện nhân step từ server

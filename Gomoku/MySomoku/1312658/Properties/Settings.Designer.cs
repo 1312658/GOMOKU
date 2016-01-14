@@ -34,7 +34,7 @@ namespace _1312658.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("ws://gomoku-lajosveres.rhcloud.com:8000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("ws://127.0.0.1:8000/")]
         public string IP {
             get {
                 return ((string)(this["IP"]));

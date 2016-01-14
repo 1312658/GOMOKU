@@ -261,7 +261,6 @@ C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySo
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\ru\System.Windows.Interactivity.resources.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll
-C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\1312658.csprojResolveAssemblyReference.cache
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\Views\frmPause.baml
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\Views\ChessBoard.g.cs
 C:\Users\donle\Google Drive\HOC KI V\LT WIN\Gomoku\1312658_11\Source\Gomoku\MySomoku\1312658\obj\Debug\Views\frmPause.g.cs
